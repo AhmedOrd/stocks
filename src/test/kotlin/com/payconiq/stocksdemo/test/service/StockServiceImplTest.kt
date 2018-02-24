@@ -3,6 +3,7 @@ package com.payconiq.stocksdemo.test.service
 import com.payconiq.stocksdemo.repo.StockRepository
 import com.payconiq.stocksdemo.service.StockServiceImpl
 import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
@@ -18,6 +19,11 @@ class StockServiceImplTest {
     @Before
     fun setUp() {
         service = StockServiceImpl(repository)
+    }
+
+    @Test
+    fun foo(){
+
     }
 
 }

@@ -41,7 +41,6 @@ public class StockViewModel implements Serializable {
     private BigDecimal amount;
 
     @ApiModelProperty(example = "2018-02-23T16:54:47.416", value = "The Time")
-    @NotNull(message = "date.invalid.error.reason")
     @DateConstraint
     private LocalDateTime dateTime;
 
@@ -58,7 +57,7 @@ public class StockViewModel implements Serializable {
         Stock stock = new Stock();
         stock.setName(name);
         stock.setPrice(amount);
-        stock.setDateTime(dateTime);
+        stock.setDateTime(LocalDateTime.now());
         return stock;
     }
 

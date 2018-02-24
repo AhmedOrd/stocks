@@ -1,5 +1,6 @@
 package com.payconiq.stocksdemo.service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,7 @@ public class StockServiceImpl implements StockService{
     public boolean updateStockPrice(StockViewModel model) {
         Stock stock = retrieveStock(model.getName()).orElseThrow(StockNotFoundException::new);
         stock.setPrice(model.getAmount());
+        stock.setDateTime(LocalDateTime.now());
         log.debug("Stock has been found, stock name {}", model.getName());
         return repository.save(stock) != null;
     }
