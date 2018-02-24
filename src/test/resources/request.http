@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/stocks
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "name": "Google",
+  "amount": "10.20",
+  "dateTime": "2018-02-23T16:54:47.416"
+}
+###

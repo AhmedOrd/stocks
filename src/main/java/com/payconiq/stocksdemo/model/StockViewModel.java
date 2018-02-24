@@ -28,6 +28,10 @@ public class StockViewModel implements Serializable {
 
     private static final long serialVersionUID = 3297423984732894L;
 
+    @ApiModelProperty(example = "4", value = "Stock id")
+    @NotNull
+    private Long id;
+
     @ApiModelProperty(example = "Google", value = "The stock name")
     @NotNull(message = "name.invalid.error.reason")
     @Size(min = 1, message = "name.invalid.error.reason")
@@ -44,6 +48,7 @@ public class StockViewModel implements Serializable {
 
     public static StockViewModel toModel(Stock stock) {
         StockViewModel stockViewModel = new StockViewModel();
+        stockViewModel.id = stock.getId();
         stockViewModel.name = stock.getName();
         stockViewModel.amount = stock.getPrice();
         stockViewModel.dateTime = stock.getDateTime();

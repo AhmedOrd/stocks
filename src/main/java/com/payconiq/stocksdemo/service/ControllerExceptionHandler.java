@@ -5,7 +5,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
 
@@ -56,11 +55,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<?> toResponse(ConstraintViolationException exception) {
         log.debug("Handling [{}]", exception.getMessage());
 
-        Optional<ErrorResponse> errorResponseOptional =
-                exception.getConstraintViolations().stream()
-                                                   .map(violation -> errorResponseFactory.createErrorResponse(violation))
-                                                   .findFirst();
-        return createBadRequstErrorResponse(errorResponseOptional.get());
+
+        ErrorResponse errorResponse = exception.getConstraintViolations().stream()
+                .map(violation -> errorResponseFactory.createErrorResponse(violation))
+                .findFirst().orElse(errorResponseFactory.interalServerErrorResponse());
+        return determineErrorType(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
@@ -68,18 +67,17 @@ public class ControllerExceptionHandler {
         log.error("Unexpected exception occurred", e);
 
         if (e instanceof IOException) {
-            return buildResponse(BAD_REQUEST, errorResponseFactory.unknownBadRequestErrorResponse());
+            return determineErrorType(errorResponseFactory.unknownBadRequestErrorResponse());
         } else if (e instanceof HttpMessageNotReadableException) {
-            return buildResponse(BAD_REQUEST, errorResponseFactory.unknownBadRequestErrorResponse());
+            return determineErrorType(errorResponseFactory.unknownBadRequestErrorResponse());
         }
-        return buildResponse(INTERNAL_SERVER_ERROR, errorResponseFactory.interalServerErrorResponse());
+        return determineErrorType(errorResponseFactory.interalServerErrorResponse());
     }
 
-    private ResponseEntity<?> buildResponse(HttpStatus badRequest, ErrorResponse simpleError) {
-        return ResponseEntity.status(badRequest).contentType(MediaType.APPLICATION_JSON).body(simpleError);
-    }
-
-    private ResponseEntity<?> createBadRequstErrorResponse(ErrorResponse errorResponses) {
+    private ResponseEntity<?> determineErrorType(ErrorResponse errorResponses) {
+        if (errorResponses.getErrorCode() == 500) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(errorResponses);
+        }
         return ResponseEntity.status(BAD_REQUEST).contentType(APPLICATION_JSON).body(errorResponses);
 
     }
