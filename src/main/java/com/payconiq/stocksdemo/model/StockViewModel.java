@@ -29,7 +29,6 @@ public class StockViewModel implements Serializable {
     private static final long serialVersionUID = 3297423984732894L;
 
     @ApiModelProperty(example = "4", value = "Stock id")
-    @NotNull
     private Long id;
 
     @ApiModelProperty(example = "Google", value = "The stock name")
